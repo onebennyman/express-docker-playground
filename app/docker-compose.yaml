@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+
+  app1:
+    build:
+      context: .
+    ports:
+      - "3001:3000"
+    environment:
+      - NAME=app1
+      - TARGETURL=app2
+      - TARGETPORT=3002
+    volumes:
+      - ./app1:/usr/src/app/data
+    restart: always
+    networks:
+      - battleNetwork
+
+  app2:
+    build:
+      context: .
+    ports:
+      - "3002:3000"
+    environment:
+      - NAME=app2
+      - TARGETURL=app1
+      - TARGETPORT=3001
+    volumes:
+      - ./app2:/usr/src/app/data
+    restart: always
+    networks:
+      - battleNetwork
+
+networks:
+  battleNetwork:
+    driver: bridge
