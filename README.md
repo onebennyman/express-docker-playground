@@ -20,3 +20,6 @@ La guía de estilos configurada es [airbnb](https://github.com/airbnb/javascript
 ```bash
 npx eslint --init
 ```
+
+### Tests
+Los tests se han realizado mediante Jest, un framework de testing en JavaScript con funciones para crear fácilmente pruebas unitarias, así como supertest para realizar las peticiones a la API
