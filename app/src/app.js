@@ -4,7 +4,7 @@ const {
 } = require('./utils/fileManipulation');
 const { startToFindAndAttack } = require('./utils/attack');
 
-const target = `http://${process.env.TARGETURL || 'localhost'}:${process.env.TARGETPORT || '3000'}/api`;
+const target = `http://${process.env.TARGETURL || 'localhost'}:${process.env.SERVERPORT || '3000'}/api`;
 const textToAppendOnLogWhenPosted = process.env.TEXTONPOST || 'Tocado desde:';
 const app = express();
 
