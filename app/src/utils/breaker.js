@@ -1,5 +1,5 @@
 const breakContainer = () => {
-  throw new Error('BREAKED');
+  process.exit(1);
 };
 
 module.exports = { breakContainer };

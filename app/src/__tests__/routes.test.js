@@ -11,4 +11,7 @@ describe('Confirma que las rutas establecidas están operativas', () => {
   it('El post a /api retorna 200', async () => request(app)
     .post('/api')
     .expect(200));
+  it('El get a /api retorna 200', async () => request(app)
+    .get('/api')
+    .expect(200));
 });
