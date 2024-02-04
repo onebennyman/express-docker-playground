@@ -1,6 +1,8 @@
 const request = require('supertest');
 const app = require('../app');
 
+jest.mock('../utils/fileManipulation');
+
 describe('Confirma que las rutas establecidas están operativas', () => {
   it('La raíz retorna 200', async () => request(app)
     .get('/')

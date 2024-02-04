@@ -1,8 +1,8 @@
 const express = require('express');
-const dotenv = require('dotenv');
-const { initConfigFile, initLogDir, appendLog } = require('./utils/fileManipulation');
+const {
+  initConfigFile, initLogDir, appendLog, appendConfig,
+} = require('./utils/fileManipulation');
 
-dotenv.config();
 const textToAppendOnLogWhenPosted = process.env.TEXTONPOST || 'Tocado desde:';
 const app = express();
 
@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 app.post('/api', (req, res) => {
   const ip = req.socket.remoteAddress;
   appendLog(`${textToAppendOnLogWhenPosted} ${ip}`);
+  appendConfig({ hit: true });
   res.send().status(200);
 });
 
