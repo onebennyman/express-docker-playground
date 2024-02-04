@@ -7,6 +7,7 @@ const initLogDirName = process.env.LOGDIRNAME || 'logs';
 const minConfig = { NAME: process.env.NAME || 'DefaultName' };
 
 const checkOrCreateMainFolder = () => fs.ensureDirSync(mainDir);
+const checkOrCreateFolder = (folderName) => fs.ensureDirSync(`${mainDir}/${folderName}`);
 const checkOrCreateFile = (fileName) => fs.ensureFileSync(`${mainDir}/${fileName}`);
 const readFile = (fileName) => fs.readFileSync(`${mainDir}/${fileName}`, { encoding: 'utf8' });
 const readJSONFileReturnObject = (fileName) => {
@@ -27,6 +28,13 @@ const writeObjectInFile = (fileName, object) => {
     return false;
   }
 };
+const getPathFor = (folder) => {
+  switch (folder) {
+    case 'logs': return `${mainDir}/${initLogDirName}`;
+    case 'main': return `${mainDir}`;
+    default: return `${mainDir}/${folder}`;
+  }
+};
 
 const checkOrCreateMinConfig = () => {
   const fileConfig = readJSONFileReturnObject(initConfigFileName);
@@ -36,7 +44,7 @@ const checkOrCreateMinConfig = () => {
 
 const initLogDir = () => {
   checkOrCreateMainFolder();
-  checkOrCreateFile(initLogDirName);
+  checkOrCreateFolder(initLogDirName);
 };
 
 const initConfigFile = () => {
@@ -46,11 +54,11 @@ const initConfigFile = () => {
 };
 
 const appendLog = (textToAdd) => {
+  const logFilePath = getPathFor('logs');
   const fileName = getDateAsStringAsDDMMYYYY();
-  checkOrCreateFile(fileName);
+  checkOrCreateFile(`${logFilePath}/${fileName}`);
   const contentToAdd = `${getHoursIn24WithMinutesAndSeconds()} - ${textToAdd}`;
-
-  fs.appendFileSync(fileName, contentToAdd, { encoding: 'utf8' });
+  fs.appendFileSync(`${logFilePath}/${fileName}`, contentToAdd, { encoding: 'utf8' });
 };
 
 module.exports = { initLogDir, initConfigFile, appendLog };

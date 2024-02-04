@@ -8,16 +8,18 @@ describe('Comprobaciones comunes entre funciones', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  const funcionesInicializacion = [fileManipulation.initLogDir, fileManipulation.initConfigFile];
 
-  funcionesInicializacion.forEach((funcionATestear) => {
-    it(`${funcionATestear.name}, llamará a las funciones ensure de fs-extra`, () => {
-      const spyOnEnsureDir = jest.spyOn(fs, 'ensureDirSync');
-      const spyOnEnsureFile = jest.spyOn(fs, 'ensureFileSync');
-      funcionATestear();
-      expect(spyOnEnsureDir).toHaveBeenCalledTimes(1);
-      expect(spyOnEnsureFile).toHaveBeenCalledTimes(1);
-    });
+  it('Iniciar el log, llamará a las funciones ensure de fs-extra', () => {
+    const spyOnEnsureDir = jest.spyOn(fs, 'ensureDirSync');
+    fileManipulation.initLogDir();
+    expect(spyOnEnsureDir).toHaveBeenCalledTimes(2);
+  });
+  it('Iniciar el config, llamará a las funciones ensure de fs-extra', () => {
+    const spyOnEnsureDir = jest.spyOn(fs, 'ensureDirSync');
+    const spyOnEnsureFile = jest.spyOn(fs, 'ensureFileSync');
+    fileManipulation.initConfigFile();
+    expect(spyOnEnsureDir).toHaveBeenCalledTimes(1);
+    expect(spyOnEnsureFile).toHaveBeenCalledTimes(1);
   });
 });
 
