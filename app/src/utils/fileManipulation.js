@@ -57,7 +57,7 @@ const appendLog = (textToAdd) => {
   const logFilePath = getPathFor('logs');
   const fileName = getDateAsStringAsDDMMYYYY();
   checkOrCreateFile(`${logFilePath}/${fileName}`);
-  const contentToAdd = `${getHoursIn24WithMinutesAndSeconds()} - ${textToAdd}`;
+  const contentToAdd = `${getHoursIn24WithMinutesAndSeconds()} - ${textToAdd}\n`;
   fs.appendFileSync(`${logFilePath}/${fileName}`, contentToAdd, { encoding: 'utf8' });
 };
 
