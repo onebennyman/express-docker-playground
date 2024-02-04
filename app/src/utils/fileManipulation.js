@@ -62,6 +62,17 @@ const appendLog = (textToAdd) => {
   fs.appendFileSync(`${logFilePath}/${fileName}`, contentToAdd, { encoding: 'utf8' });
 };
 
+const resetSessionAttacks = () => {
+  let config = readJSONFileReturnObject(initConfigFileName);
+  if (config === null) {
+    initConfigFile();
+    config = readJSONFileReturnObject(initConfigFileName);
+  }
+  config.sessionHitsTaken = 0;
+  writeObjectInFile(initConfigFileName, config);
+  breakContainer();
+};
+
 const appendConfig = (dataObject = {}) => {
   let config = readJSONFileReturnObject(initConfigFileName);
   if (config === null) {
@@ -75,10 +86,10 @@ const appendConfig = (dataObject = {}) => {
   }
 
   writeObjectInFile(initConfigFileName, config);
-  if (config.sessionHitsTaken >= maxHitsPerSession) breakContainer();
+  if (config.sessionHitsTaken >= maxHitsPerSession) resetSessionAttacks();
   return true;
 };
 
 module.exports = {
-  initLogDir, initConfigFile, appendLog, appendConfig,
+  initLogDir, initConfigFile, appendLog, appendConfig, resetSessionAttacks,
 };
