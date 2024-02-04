@@ -1,10 +1,12 @@
 const fs = require('fs-extra');
 const { getDateAsStringAsDDMMYYYY, getHoursIn24WithMinutesAndSeconds } = require('./date');
+const { breakContainer } = require('./breaker');
 
 const mainDir = process.env.MAINDIR || 'data';
 const initConfigFileName = process.env.CONFIGFILENAME || 'config.json';
 const initLogDirName = process.env.LOGDIRNAME || 'logs';
-const minConfig = { NAME: process.env.NAME || 'DefaultName' };
+const minConfig = { NAME: process.env.NAME || 'DefaultName', totalHitsTaken: 0, sessionHitsTaken: 0 };
+const maxHitsPerSession = parseInt(process.env.MAXHITSPERSESSION || '0', 10);
 
 const checkOrCreateMainFolder = () => fs.ensureDirSync(mainDir);
 const checkOrCreateFolder = (folderName) => fs.ensureDirSync(`${mainDir}/${folderName}`);
@@ -56,9 +58,27 @@ const initConfigFile = () => {
 const appendLog = (textToAdd) => {
   const logFilePath = getPathFor('logs');
   const fileName = getDateAsStringAsDDMMYYYY();
-  checkOrCreateFile(`${logFilePath}/${fileName}`);
   const contentToAdd = `${getHoursIn24WithMinutesAndSeconds()} - ${textToAdd}\n`;
   fs.appendFileSync(`${logFilePath}/${fileName}`, contentToAdd, { encoding: 'utf8' });
 };
 
-module.exports = { initLogDir, initConfigFile, appendLog };
+const appendConfig = (dataObject = {}) => {
+  let config = readJSONFileReturnObject(initConfigFileName);
+  if (config === null) {
+    initConfigFile();
+    config = readJSONFileReturnObject(initConfigFileName);
+  }
+
+  if (dataObject.hit === true) {
+    config.totalHitsTaken += 1;
+    config.sessionHitsTaken += 1;
+  }
+
+  writeObjectInFile(initConfigFileName, config);
+  if (config.sessionHitsTaken >= maxHitsPerSession) breakContainer();
+  return true;
+};
+
+module.exports = {
+  initLogDir, initConfigFile, appendLog, appendConfig,
+};

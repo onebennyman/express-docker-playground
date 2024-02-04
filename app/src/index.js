@@ -1,3 +1,7 @@
+const dotenv = require('dotenv');
+
+dotenv.config();
+
 const app = require('./app');
 const { logDecoratedText } = require('./utils/logDecorator');
 
